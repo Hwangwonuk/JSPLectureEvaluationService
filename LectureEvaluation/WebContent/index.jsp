@@ -27,9 +27,9 @@
 		         	 회원 관리
             </a>
             <div class="dropdown-menu" aria-labelledby="dropdown">
-              <a class="dropdown-item" href="userLogin.jsp">로그인</a>
-              <a class="dropdown-item" href="userRegister.jsp">회원가입</a>
-              <a class="dropdown-item" href="userLogout.jsp">로그아웃</a>
+              <a class="dropdown-item" href="#">로그인</a>
+              <a class="dropdown-item" href="#">회원가입</a>
+              <a class="dropdown-item" href="#">로그아웃</a>
             </div>
           </li>
         </ul>
@@ -39,12 +39,13 @@
         </form>
       </div>
     </nav>
-    <!-- bootstrap 자바스크립트 추가하기 -->
-	<script src="./js/bootsrap.min.js"></script>
-	<!-- 제이쿼리 자바스크립트 추가하기 -->
+ 	<!-- 제이쿼리 자바스크립트 추가하기 -->
 	<script src="./js/jquery.min.js"></script>
-	<!-- pooper 자바스크립트 추가하기 -->
-	<script src="./js/pooper.js"></script>
+	<!-- pooper 자바스크립트 추가하기
+	<script src="./js/popper.js"></script> -->
+	<!-- bootstrap 자바스크립트 추가하기 -->
+	<!-- <script src="./js/bootsrap.min.js"></script> -->
+	<script src="./js/bootstrap.bundle.min.js"></script>
 	
 </body>
 </html>
