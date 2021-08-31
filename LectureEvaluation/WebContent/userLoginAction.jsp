@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!-- 회원가입을 처리하는 함수 -->
 <%@ page import="user.UserDTO"%>
 <%@ page import="user.UserDAO"%>
 <%@ page import="util.SHA256" %>
@@ -7,21 +6,7 @@
 <%
 	request.setCharacterEncoding("UTF-8");
 	String userID = null;
-	if(session.getAttribute("userID") != null) { // 로그인을 한 상태라서 userID session의 값이 존재한다면
-		userID = (String) session.getAttribute("userID"); // userID에 해당 session의 값을 넣는다
-	}
-	if(userID != null) {
-		PrintWriter script = response.getWriter();
-		script.println("<script>");
-		script.println("alert('로그인이 된 상태입니다.');");
-		script.println("location.href = 'index.jsp';");
-		script.println("</script>");
-		script.close();
-		return;
-	}
-	// 로그인을 한 상태라면 회원가입 요청을 할 수 없다
 	String userPassword = null;
-	String userEmail = null;
 	if (request.getParameter("userID") != null) { 
 		// userID를 사용자가 잘 제출했다면
 		userID = request.getParameter("userID");  
@@ -32,12 +17,7 @@
 		userPassword = request.getParameter("userPassword");  
 		// userPassword에 사용자가 입력한 userPassword를 담는다
 	}
-	if (request.getParameter("userEmail") != null) { 
-		// userEmail를 사용자가 잘 제출했다면
-		userEmail = request.getParameter("userEmail");  
-		// userEmail에 사용자가 입력한 ID를 담는다
-	}
-	if (userID == null || userPassword == null || userEmail == null) {
+	if (userID == null || userPassword == null) {
 		// ID,pwd,Email 중에 하나라도 비어있다면 메세지를 출력
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
@@ -50,22 +30,36 @@
 		// 오류가 발생하면 jsp 페이지 종료
 	}
 	UserDAO userDAO = new UserDAO();
-	int result = userDAO.join(new UserDTO(userID, userPassword, userEmail, SHA256.getSHA256(userEmail), false));
-	if (result == -1) {
+	int result = userDAO.login(userID, userPassword);
+	if (result == 1) { // 로그인이 잘 되었을 때
+		session.setAttribute("userID", userID);
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
-		script.println("alert('이미 존재하는 아이디입니다.');");
+		script.println("location.href = 'index.jsp'");
+		script.println("</script>");
+		script.close();
+		return;
+	} else if(result == 0) { // 비밀번호 오류
+		PrintWriter script = response.getWriter();
+		script.println("<script>");
+		script.println("alert('비밀번호가 틀립니다.');");
 		script.println("history.back();");
 		script.println("</script>");
 		script.close();
 		return;
-	} else {
-		session.setAttribute("userID", userID);
-		// 회원가입 이후에 바로 로그인 시킴
+	} else if(result == -1) { // 아이디 오류
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
-		script.println("location.href = 'emailSendAction.jsp'");
-		// 사용자가 회원가입을 하자마자 이메일 인증
+		script.println("alert('존재하지 않는 아이디입니다.');");
+		script.println("history.back();");
+		script.println("</script>");
+		script.close();
+		return;
+	} else if(result == -2) { // 데이터베이스 오류
+		PrintWriter script = response.getWriter();
+		script.println("<script>");
+		script.println("alert('데이터베이스 오류가 발생했습니다.');");
+		script.println("history.back();");
 		script.println("</script>");
 		script.close();
 		return;

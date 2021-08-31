@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!-- 회원가입을 처리하는 함수 -->
 <%@ page import="javax.mail.Transport" %>
 <%@ page import="javax.mail.Message" %>
 <%@ page import="javax.mail.Address" %>
@@ -114,9 +113,18 @@
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" id="dropdown" data-toggle="dropdown"> 회원 관리 </a>
 						<div class="dropdown-menu" aria-labelledby="dropdown">
+<%
+	if(userID == null) { // 로그인이 안된 상태라면
+%>
 							<a class="dropdown-item" href="userLogin.jsp">로그인</a> 
-							<a class="dropdown-item" href="userJoin.jsp">회원가입</a> 
+							<a class="dropdown-item" href="userJoin.jsp">회원가입</a>
+<%
+	} else { // 로그인이 된 상태라면
+%>
 							<a class="dropdown-item" href="userLogout.jsp">로그아웃</a>
+<%
+	}
+%>
 						</div>
 				</li>
 			</ul>

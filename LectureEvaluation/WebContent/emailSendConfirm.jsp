@@ -18,11 +18,11 @@
 	if(session.getAttribute("userID") != null) { // 로그인을 한 상태라서 userID session의 값이 존재한다면
 		userID = (String) session.getAttribute("userID"); // userID에 해당 session의 값을 넣는다
 	}
-	if(userID != null) {
+	if(userID == null) {
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
-		script.println("alert('로그인이 된 상태입니다.');");
-		script.println("location.href = 'index.jsp';");
+		script.println("alert('로그인을 해주세요.');");
+		script.println("location.href = 'userLogin.jsp';");
 		script.println("</script>");
 		script.close();
 		return;
@@ -65,21 +65,10 @@
 		</div>
 	</nav>
 	<section class="container mt-3" style="max-width: 560px;">
-		<form method="post" action="./userRegisterAction.jsp">
-			<div class="form-group">
-				<label>아이디</label>
-				<input type="text" name="userID" class="form-control">
-			</div>
-			<div class="form-group">
-				<label>비밀번호</label>
-				<input type="password" name="userPassword" class="form-control">
-			</div>
-			<div class="form-group">
-				<label>이메일</label>
-				<input type="email" name="userEmail" class="form-control">
-			</div>
-			<button type="submit" class="btn btn-primary">회원가입</button>
-		</form>	
+		<div class="alert alert-warning mt-4" role="alert">
+			이메일 주소 인증을 하셔야 이용 가능합니다. 인증 메일을 받지 못하셨나요?
+		</div>
+		<a href="emailSendAction.jsp" class="btn btn-primary">인증메일 다시받기</a>
 	</section>		
 	<footer class="bg-dark mt-4 mt-4 p-5 text-center" style="color: #FFFFFF;">
 		Copyright &copy; 2021 황원욱 All Rights Reserved.
