@@ -1,0 +1,43 @@
+톰캣 설치 후 
+실행하면 localhost - 우리 컴퓨터 자체가 동작을한다
+실제로 우리 컴퓨터 내부적으로 웹사이트를 테스트하기 위해서 필요하다. 클라이언트와 서버 역할을 동시에 하기위해서
+start up exe파일로 실행
+
+startup.bat 실행안되면
+시작 검색창에서 시스템 환경변수 편집 검색 후 환경변수 클릭, 시스템 변수, 새로만들기, 변수이름 : JAVA_HOME, 변수값 JDK설치경로
+후 확인. 다시 cmd창 재실행 후 톰캣 bin 경로로 cd해서 startup.bat실행
+
+콘솔창 한글 깨짐 수정
+D:\tomcat\apache-tomcat-8.5.57\conf\logging.properties
+1catalina.org.apache.juli.AsyncFileHandler.encoding = EUC-KR
+2localhost.org.apache.juli.AsyncFileHandler.encoding = EUC-KR
+3manager.org.apache.juli.AsyncFileHandler.encoding = EUC-KR
+4host-manager.org.apache.juli.AsyncFileHandler.encoding = EUC-KR
+java.util.logging.ConsoleHandler.encoding = EUC-KR
+
+자기 자신의 서버를 사용할때는 8080 포트사용
+http 프로토콜을 이용해서 웹사이트를 이용할때는 80포트사용
+
+네이버등 https를 사용하는 경우는 443 포트를 사용
+https같은 경우는 인증서를 사용하는 방식이기 때문에 서버와 클라이언트가 통신을 할떄
+PKI라는 방식을 사용해서 암호화를 하기때문에 탈취당해도 보안에 강하다.
+
+80포트는 중간에서 해커가 가로채는경우 모든 패킷들을 다 들키게된다.
+
+new dynamic web project 생성 후 new Runtime 톰캣버전 설정 후 C:\Users\Windows10\Downloads\apache-tomcat-8.5.69-windows-x64\apache-tomcat-8.5.69
+파일경로 입력
+
+일반적으로 web프로그램을 만들때는 index란 이름으로 메인 페이지를 만든다. 하나의 약속
+
+톰캣 포트가 8080인데 mysql 등에서 사용하고 있다면 에러가 나오는데 cmd창을 켜서
+C:\Users\Windows10>netstat -ano | findstr 8080 실행후
+TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING       15700
+  TCP    [::]:8080              [::]:0                 LISTENING       15700
+  TCP    [::1]:5132             [::1]:8080             CLOSE_WAIT      15776
+  TCP    [::1]:8080             [::1]:5132             FIN_WAIT_2      15700
+  TCP    [::1]:8080             [::1]:14948            FIN_WAIT_2      15700
+  TCP    [::1]:14948            [::1]:8080             CLOSE_WAIT      15776
+가나오고 맨오른쪽의 번호를 확인 후
+teskkill /f /pid 15700 를 실행하여 프로세스를 종료한다.
+
+
