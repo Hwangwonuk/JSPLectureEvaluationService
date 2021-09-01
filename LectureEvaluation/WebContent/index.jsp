@@ -188,10 +188,10 @@
 					<form action="./evaluationRegisterAction.jsp" method="post">
 						<div class="form-row">
 							<div class="form-group col-sm-6">
-								<label>강의명</label> <input type="text" name="lectureName" class="form-contol" maxlength="20">
+								<label>강의명</label> <input type="text" name="lectureName" class="form-control" maxlength="20" />
 							</div>
 							<div class="form-group col-sm-6">
-								<label>교수명</label> <input type="text" name="professorName" class="form-contol" maxlength="20">
+								<label>교수명</label> <input type="text" name="professorName" class="form-control" maxlength="20" />
 							</div>
 						</div>
 						<div class="form-row">
@@ -232,7 +232,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label>제목</label> <input type="text" name="evaluationTime"
+							<label>제목</label> <input type="text" name="evaluationTitle"
 								class="form-control" maxlength="30">
 						</div>
 						<div class="form-group">
