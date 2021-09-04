@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter"%>
 <%@ page import="user.UserDAO"%>
+<%@ page import="evaluation.EvaluationDTO"%>
+<%@ page import="evaluation.EvaluationDAO"%>
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="java.net.URLEncoder"%>
 <!doctype html>
 <html>
 <head>
@@ -15,6 +19,27 @@
 </head>
 <body>
 <%
+	request.setCharacterEncoding("UTF-8"); // index.jsp페이지는 강의평가 게시글을 출력해주기 때문에 항상 사용자가 어떤 게시물을 검색했는지 판단할 수 있어야 한다.
+	String lectureDivide = "전체";		   // 기본적으로 사용자가 검색한 강의구분은 전체로 설정
+	String searchType = "최신순";			   // 기본적으로 최신순으로 검색
+	String search = "";				       // 기본적으로 어떠한 내용도 검색하지 않은것 공백
+	int pageNumber = 0;					   // 기본적으로 0페이지
+	if (request.getParameter("lectureDivide") != null) { // 사용자가 특정한 내용으로 검색을 했는지
+		lectureDivide = request.getParameter("lectureDivide");
+	}
+	if (request.getParameter("searchType") != null) { 
+		searchType = request.getParameter("searchType");
+	}
+	if (request.getParameter("search") != null) { 
+		search = request.getParameter("search");
+	}
+	if (request.getParameter("pageNumber") != null) {
+		try {
+			pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
+		} catch (Exception e) { // 사용자가 입력한 값이 정수형이 아닌 경우에는 오류가 발생하기 때문에 예외처리
+			System.out.println("검색 페이지 번호 오류");
+		}	
+	}
 	String userID = null;
 	if(session.getAttribute("userID") != null) { // 로그인을 한 상태라서 userID session의 값이 존재한다면
 		userID = (String) session.getAttribute("userID"); // userID에 해당 session의 값을 넣는다
@@ -78,9 +103,13 @@
 		<form method="get" action="./index.jsp" class="form-inline mt-3">
 			<select name="lectureDivide" class="form-control mx-1 mt-2">
 				<option value="전체">전체</option>
-				<option value="전공">전공</option>
-				<option value="교양">교양</option>
-				<option value="기타">기타</option>
+				<option value="전공" <%if(lectureDivide.equals("전공")) out.println("selected"); %>>전공</option>
+				<option value="교양" <%if(lectureDivide.equals("교양")) out.println("selected"); %>>교양</option>
+				<option value="기타" <%if(lectureDivide.equals("기타")) out.println("selected"); %>>기타</option>
+			</select>
+			<select name="searchType" class="form-control mx-1 mt-2">
+				<option value="최신순">최신순</option>
+				<option value="추천순" <%if(searchType.equals("추천순")) out.println("selected"); %>>추천순</option>
 			</select>
 			<input type="text" name="search" class="form-control mx-1 mt-2" placeholder="내용을 입력하세요">
 			<button type="submit" class="btn btn-primary mx-1 mt-2">검색</button>
@@ -88,54 +117,36 @@
 			<!-- 등록양식 modal -->
 			<a class="btn btn-danger mx-1 mt-2" data-toggle="modal" href="#reportModal">신고</a>
 		</form>
-		<div class="car bg-light mt-3">
+<%
+	// 사용자가 검색을 한 내용이 리스트에 담겨서 출력이 되도록 만듬
+	ArrayList<EvaluationDTO> evaluationList = new ArrayList<EvaluationDTO>();
+	// 사용자가 검색한 내용을 토대로 실제로 강의평가 게시들을을 가져오게 만듬
+	evaluationList = new EvaluationDAO().getList(lectureDivide, searchType, search, pageNumber);
+	if(evaluationList != null)
+		for(int i = 0; i < evaluationList.size(); i++) {
+			if(i == 5) break; // 6개의 글중에서 5개까지만 출력되도록
+			EvaluationDTO evaluation = evaluationList.get(i); // 해당 인덱스에 값을 가져오도록 하여 카드안에서 출력되도록 하기위해
+%>
+		<div class="card bg-light mt-3">
 			<div class="card-header bg-light">
 				<div class="row">
-					<div class="col-8 text-left">컴퓨터개론&nbsp;<small>황원욱</small></div>
+					<div class="col-8 text-left"><%= evaluation.getLectureName() %>&nbsp;<small><%= evaluation.getProfessorName() %></small></div>
 					<div class="col-4 text-right">
-						종합<span style="color: red;">A</span>
+						종합<span style="color: red;"><%= evaluation.getTotalScore() %></span>
 					</div>
 				</div>
 			</div>
 			<div class="card-body">
 				<h5 class="card-title">
-					정말 좋은 강의에요.&nbsp;<small>(2021년 가을학기)</small>				
+					<%= evaluation.getEvaluationTitle() %>&nbsp;<small>(<%= evaluation.getLectureYear() %>년 <%= evaluation.getSemesterDivide() %>)</small>				
 				</h5>
-				<p class="card-text">강의가 많이 널널해서, 솔직히 많이 배운건 없는것 같지만 학점도 잘나오고 너무 좋은것 같습니다.</p>
+				<p class="card-text"><%= evaluation.getEvaluationContent() %></p>
 				<div class="row">
 					<div class="col-9 text-left">
-						성적 <span style="color: red;">A</span>
-						널널 <span style="color: red;">A</span>
-						강의 <span style="color: red;">B</span>
-						<span style="color: green;">(추천: 15)</span>
-					</div>
-					<div class="col-3 text-right">
-						<a onclick="return confirm('추천하시겠습니까?')" href="./likeAction.jsp?evaluationID=">추천</a>
-						<a onclick="return confirm('삭제하시겠습니까?')" href="./deleteAction.jsp?evaluationID=">삭제</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="car bg-light mt-3">
-			<div class="card-header bg-light">
-				<div class="row">
-					<div class="col-8 text-left">JAVA&nbsp;<small>홍길동</small></div>
-					<div class="col-4 text-right">
-						종합<span style="color: red;">B</span>
-					</div>
-				</div>
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">
-					나쁘지 않습니다.&nbsp;<small>(2021년 여름학기)</small>				
-				</h5>
-				<p class="card-text">JAVA를 처음 배웠는데, 상당히 재미있었습니다.</p>
-				<div class="row">
-					<div class="col-9 text-left">
-						성적 <span style="color: red;">B</span>
-						널널 <span style="color: red;">C</span>
-						강의 <span style="color: red;">B</span>
-						<span style="color: green;">(추천: 1)</span>
+						성적 <span style="color: red;"><%= evaluation.getCreditScore() %></span>
+						널널 <span style="color: red;"><%= evaluation.getComfortableScore() %></span>
+						강의 <span style="color: red;"><%= evaluation.getLectureScore() %></span>
+						<span style="color: green;">(추천: <%= evaluation.getLikeCount() %>)</span>
 					</div>
 					<div class="col-3 text-right">
 						<a onclick="return confirm('추천하시겠습니까?')" href="./likeAction.jsp?evaluationID=">추천</a>
@@ -144,35 +155,45 @@
 				</div>
 			</div>
 		</div>		
-		<div class="car bg-light mt-3">
-			<div class="card-header bg-light">
-				<div class="row">
-					<div class="col-8 text-left">알고리즘&nbsp;<small>김길자</small></div>
-					<div class="col-4 text-right">
-						종합<span style="color: red;">C</span>
-					</div>
-				</div>
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">
-					별로에요.&nbsp;<small>(2021년 2학기)</small>				
-				</h5>
-				<p class="card-text">강의가 너무 이해하기 어렵습니다.</p>
-				<div class="row">
-					<div class="col-9 text-left">
-						성적 <span style="color: red;">B</span>
-						널널 <span style="color: red;">C</span>
-						강의 <span style="color: red;">C</span>
-						<span style="color: green;">(추천: 0)</span>
-					</div>
-					<div class="col-3 text-right">
-						<a onclick="return confirm('추천하시겠습니까?')" href="./likeAction.jsp?evaluationID=">추천</a>
-						<a onclick="return confirm('삭제하시겠습니까?')" href="./deleteAction.jsp?evaluationID=">삭제</a>
-					</div>
-				</div>
-			</div>
-		</div>				
-	</section>	
+<%
+	}
+%>
+	</section>
+	<!-- pagination은 bootstrap에서 제공되는 기술중 하나로서 여러개의 페이지가 있는 하나의 구성요소를 작업할 때 사용 일반적으로 게시판에서 사용  -->>
+	<ul class="pagination justify-content-center mt-3 ">
+		<li class="page-item">
+<%
+	if(pageNumber <= 0) {
+%>
+	<a class="page-link disabled">이전</a>
+<%
+	} else {
+	// 특정한 URL로 이동하는 경우에는 UTLEncoder를 이용하는게 일반적이다. 현재 사용자가 입력했던 값은 유지한채 페이지를 뒤로이동
+%>
+	<a class="page-link" href="./index.jsp?lectureDivide=<%= URLEncoder.encode(lectureDivide, "UTF-8") %>&searchType=
+	<%= URLEncoder.encode(searchType, "UTF-8") %>&search=<%= URLEncoder.encode(search, "UTF-8") %>&pageNumber=
+	<%= pageNumber - 1 %>">이전</a>
+<%
+	}
+%>
+		</li>
+		<li>
+<%
+	if(evaluationList.size() < 6) {
+%>
+	<a class="page-link disabled">다음</a>
+<%
+	} else {
+	// 특정한 URL로 이동하는 경우에는 UTLEncoder를 이용하는게 일반적이다. 현재 사용자가 입력했던 값은 유지한채 페이지를 뒤로이동
+%>
+	<a class="page-link" href="./index.jsp?lectureDivide=<%= URLEncoder.encode(lectureDivide, "UTF-8") %>&searchType=
+	<%= URLEncoder.encode(searchType, "UTF-8") %>&search=<%= URLEncoder.encode(search, "UTF-8") %>&pageNumber=
+	<%= pageNumber + 1 %>">다음</a>
+<%
+	}
+%>
+		</li>
+	</ul>
 	<div class="modal fade" id="registerModal" tabindex="-1" role="dialog"
 		aria-labelledby="modal" aria-hidden="true">
 		<div class="modal-dialog">
