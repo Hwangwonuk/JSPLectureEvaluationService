@@ -19,18 +19,23 @@ public class EvaluationDAO {
 			// DB접근하는 함수는 DatabaseUtil 외부 util에 정의를 함으로써 안정적으로 모듈화 함
 			conn = DatabaseUtil.getConnection();	// DB와 연결
 			pstmt = conn.prepareStatement(SQL);		// SQL실행 문자로 준비시킴
-			pstmt.setString(1, evaluationDTO.getUserID()); 				// 각각 일치하는 데이터를 넣어줌
-			pstmt.setString(2, evaluationDTO.getLectureName());			
-			pstmt.setString(3, evaluationDTO.getProfessorName());			
-			pstmt.setInt(4, evaluationDTO.getLectureYear());							
-			pstmt.setString(5, evaluationDTO.getSemesterDivide());			
-			pstmt.setString(6, evaluationDTO.getLectureDivide());			
-			pstmt.setString(7, evaluationDTO.getEvaluationTitle());			
-			pstmt.setString(8, evaluationDTO.getEvaluationContent());			
-			pstmt.setString(9, evaluationDTO.getTotalScore());			
-			pstmt.setString(10, evaluationDTO.getCreditScore());			
-			pstmt.setString(11, evaluationDTO.getComfortableScore());			
-			pstmt.setString(12, evaluationDTO.getLectureScore());			
+													// 각각 일치하는 데이터를 넣어줌
+			// 시큐어 코딩을 위해 replaceAll() 구문 추가
+			// XSS공격에 사용되는 script 구문을 작성할 수 있는 <,>를 html언어로 바꿔준다. \r\n 줄바꿈은 br태그로 바꿈
+			// 게시글이 등록될 때 모든 <,>가 자동으로 치환이 되기 때문에 기본적으로 js구문을 삽입할 수가 까다로워진다.
+			// 크로스 사이트 스크립팅(XSS)공격은 시중에 라이브러리를 사용하여 방어할 수 있다. 
+			pstmt.setString(1, evaluationDTO.getUserID().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));		
+			pstmt.setString(2, evaluationDTO.getLectureName().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setString(3, evaluationDTO.getProfessorName().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setInt(4, evaluationDTO.getLectureYear()); // Int형이기 때문에 따로 처리할 필요 없음					
+			pstmt.setString(5, evaluationDTO.getSemesterDivide().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setString(6, evaluationDTO.getLectureDivide().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setString(7, evaluationDTO.getEvaluationTitle().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setString(8, evaluationDTO.getEvaluationContent().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setString(9, evaluationDTO.getTotalScore().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setString(10, evaluationDTO.getCreditScore().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setString(11, evaluationDTO.getComfortableScore().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
+			pstmt.setString(12, evaluationDTO.getLectureScore().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\r\n", "<br />"));			
 			return pstmt.executeUpdate();	// 실제로 INSERT 구문을 실행한 결과를 반환		
 		} catch (Exception e) {
 			e.printStackTrace();
