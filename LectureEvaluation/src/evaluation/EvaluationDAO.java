@@ -101,4 +101,76 @@ public class EvaluationDAO {
 		}
 		return evaluationList; // 리스트에 담긴 결과를 반환
 	}
+	
+	public int like(String evaluationID) {
+		String SQL = "UPDATE EVALUATION SET likeCount = likeCount + 1 WHERE evaluationID = ?";
+		// 특정한 강의평가 글의 likeCount를 1증가
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DatabaseUtil.getConnection();	// DB와 연결
+			pstmt = conn.prepareStatement(SQL);		// SQL실행 문자로 준비시킴
+			pstmt.setInt(1, Integer.parseInt(evaluationID));
+			return pstmt.executeUpdate();			// 실행한 결과를 반환
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Connection, PreparedStatement, ResultSet은 한번 사용이 되고나면 자원을 해제하여야 한다.
+			// 서버에 무리가 가지 않도록 하기위해서
+			try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (pstmt != null) pstmt.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+		}
+		return -1; // 데이터베이스 오류
+	}
+	
+	public int delete(String evaluationID) {
+		String SQL = "DELETE FROM EVALUATION WHERE evaluationID = ?";
+		// 특정한 강의평가 글을 삭제
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DatabaseUtil.getConnection();	// DB와 연결
+			pstmt = conn.prepareStatement(SQL);		// SQL실행 문자로 준비시킴
+			pstmt.setInt(1, Integer.parseInt(evaluationID));
+			return pstmt.executeUpdate();			// 실행한 결과를 반환
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Connection, PreparedStatement, ResultSet은 한번 사용이 되고나면 자원을 해제하여야 한다.
+			// 서버에 무리가 가지 않도록 하기위해서
+			try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (pstmt != null) pstmt.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+		}
+		return -1; // 데이터베이스 오류
+	}
+	
+	public String getUserID(String evaluationID) {
+		// 특정한 강의평가 글을 작성한 사용자의 ID를 구하는 메소드
+		String SQL = "SELECT userID FROM EVALUATION WHERE evaluationID = ?";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DatabaseUtil.getConnection();	// DB와 연결
+			pstmt = conn.prepareStatement(SQL);		// SQL실행 문자로 준비시킴
+			pstmt.setInt(1, Integer.parseInt(evaluationID));
+			rs = pstmt.executeQuery();
+			if (rs.next()) { 						// 결과가 존재하는 경우
+				return rs.getString(1);				// 아이디 값을 반환
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Connection, PreparedStatement, ResultSet은 한번 사용이 되고나면 자원을 해제하여야 한다.
+			// 서버에 무리가 가지 않도록 하기위해서
+			try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (pstmt != null) pstmt.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+		}
+		return null; // 존재하지 않는 아이디
+	}
 }
