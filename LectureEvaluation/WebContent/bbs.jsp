@@ -102,24 +102,33 @@
 			</form>
 		</div>
 	</nav>
-	<section class="container">
-		<form method="get" action="./index.jsp" class="form-inline mt-3">
-			<select name="lectureDivide" class="form-control mx-1 mt-2">
-				<option value="전체">전체</option>
-				<option value="전공" <%if(lectureDivide.equals("전공")) out.println("selected"); %>>전공</option>
-				<option value="교양" <%if(lectureDivide.equals("교양")) out.println("selected"); %>>교양</option>
-				<option value="기타" <%if(lectureDivide.equals("기타")) out.println("selected"); %>>기타</option>
-			</select>
-			<select name="searchType" class="form-control mx-1 mt-2">
-				<option value="최신순">최신순</option>
-				<option value="추천순" <%if(searchType.equals("추천순")) out.println("selected"); %>>추천순</option>
-			</select>
-			<input type="text" name="search" class="form-control mx-1 mt-2" placeholder="내용을 입력하세요">
-			<button type="submit" class="btn btn-primary mx-1 mt-2">검색</button>
-			<a class="btn btn-primary mx-1 mt-2" data-toggle="modal" href="#registerModal">등록하기</a>
-			<!-- 등록양식 modal -->
-			<a class="btn btn-danger mx-1 mt-2" data-toggle="modal" href="#reportModal">신고</a>
-		</form>
+	<div class="container">
+		<div class="row">
+			<!-- 게시판의  목록들이 홀,짝 번갈아가며 색상이 변경되게 만들어줌 -->
+			<table class="table table-striped" style="text-align:center; border:1px solid #dddddd">
+				<thead>
+					<tr>
+						<th style="background-color: #eeeeee text-align: center;">번호</th>
+						<th style="background-color: #eeeeee text-align: center;">제목</th>
+						<th style="background-color: #eeeeee text-align: center;">작성자</th>
+						<th style="background-color: #eeeeee text-align: center;">작성일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>1</td>
+						<td>안녕하세요</td>
+						<td>홍길동</td>
+						<td>2021-05-04</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="position:relative; left:890px;">
+			<a href="write.jsp" class="btn btn-primary pull-right">글쓰기</a>
+			</div>
+		</div>
+	</div>
+	
 <%
 	// 사용자가 검색을 한 내용이 리스트에 담겨서 출력이 되도록 만듬
 	ArrayList<EvaluationDTO> evaluationList = new ArrayList<EvaluationDTO>();
@@ -130,38 +139,13 @@
 			if(i == 5) break; // 6개의 글중에서 5개까지만 출력되도록
 			EvaluationDTO evaluation = evaluationList.get(i); // 해당 인덱스에 값을 가져오도록 하여 카드안에서 출력되도록 하기위해
 %>
-		<div class="card bg-light mt-3">
-			<div class="card-header bg-light">
-				<div class="row">
-					<div class="col-8 text-left"><%= evaluation.getLectureName() %>&nbsp;<small><%= evaluation.getProfessorName() %></small></div>
-					<div class="col-4 text-right">
-						종합<span style="color: red;"><%= evaluation.getTotalScore() %></span>
-					</div>
-				</div>
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">
-					<%= evaluation.getEvaluationTitle() %>&nbsp;<small>(<%= evaluation.getLectureYear() %>년 <%= evaluation.getSemesterDivide() %>)</small>				
-				</h5>
-				<p class="card-text"><%= evaluation.getEvaluationContent() %></p>
-				<div class="row">
-					<div class="col-9 text-left">
-						성적 <span style="color: red;"><%= evaluation.getCreditScore() %></span>
-						널널 <span style="color: red;"><%= evaluation.getComfortableScore() %></span>
-						강의 <span style="color: red;"><%= evaluation.getLectureScore() %></span>
-						<span style="color: green;">(추천: <%= evaluation.getLikeCount() %>)</span>
-					</div>
-					<div class="col-3 text-right">
-						<a onclick="return confirm('추천하시겠습니까?')" href="./likeAction.jsp?evaluationID=<%= evaluation.getEvaluationID() %>">추천</a>
-						<a onclick="return confirm('삭제하시겠습니까?')" href="./deleteAction.jsp?evaluationID=<%= evaluation.getEvaluationID() %>">삭제</a>
-					</div>
-				</div>
-			</div>
-		</div>		
+		
+		
+		
 <%
 	}
 %>
-	</section>
+	
 	<!-- pagination은 bootstrap에서 제공되는 기술중 하나로서 여러개의 페이지가 있는 하나의 구성요소를 작업할 때 사용 일반적으로 게시판에서 사용  -->
 	<ul class="pagination justify-content-center mt-3 ">
 		<li class="page-item">
@@ -197,124 +181,10 @@
 %>
 		</li>
 	</ul>
-	<div class="modal fade" id="registerModal" tabindex="-1" role="dialog"
-		aria-labelledby="modal" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title" id="modal">평가등록</h5>
-					<button type="button" class="close" data-dismiss="modal"
-						aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<form action="./evaluationRegisterAction.jsp" method="post">
-						<div class="form-row">
-							<div class="form-group col-sm-6">
-								<label>강의명</label> <input type="text" name="lectureName" class="form-control" maxlength="20" />
-							</div>
-							<div class="form-group col-sm-6">
-								<label>교수명</label> <input type="text" name="professorName" class="form-control" maxlength="20" />
-							</div>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-sm-4">
-								<label>수강연도</label> <select name="lectureYear"
-									class="form-control">
-									<option value="2011">2011</option>
-									<option value="2012">2012</option>
-									<option value="2013">2013</option>
-									<option value="2014">2014</option>
-									<option value="2015">2015</option>
-									<option value="2016">2016</option>
-									<option value="2017">2017</option>
-									<option value="2018">2018</option>
-									<option value="2019">2019</option>
-									<option value="2020">2020</option>
-									<option value="2021" selected>2021</option>
-									<option value="2022">2022</option>
-									<option value="2023">2023</option>
-								</select>
-							</div>
-							<div class="form-group col-sm-4">
-								<label>수강 학기</label> <select name="semesterDivide"
-									class="form-control">
-									<option value="1학기" selected>1학기</option>
-									<option value="여름학기">여름학기</option>
-									<option value="2학기">2학기</option>
-									<option value="겨울학기">겨울학기</option>
-								</select>
-							</div>
-							<div class="form-group col-sm-4">
-								<label>강의 구분</label> <select name="lectureDivide"
-									class="form-control">
-									<option value="전공" selected>전공</option>
-									<option value="교양">교양</option>
-									<option value="기타">기타</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label>제목</label> <input type="text" name="evaluationTitle"
-								class="form-control" maxlength="30">
-						</div>
-						<div class="form-group">
-							<label>내용</label>
-							<textarea name="evaluationContent" class="form-control"
-								maxlength="2048" style="height: 180px;"></textarea>
-						</div>
-						<div class="form-row">
-							<div class="form-group col-sm-3">
-								<label>종합</label> <select name="totalScore" class="form-control">
-									<option value="A" selected>A</option>
-									<option value="B">B</option>
-									<option value="C">C</option>
-									<option value="D">D</option>
-									<option value="F">F</option>
-								</select>
-							</div>
-							<div class="form-group col-sm-3">
-								<label>성적</label> <select name="creditScore"
-									class="form-control">
-									<option value="A" selected>A</option>
-									<option value="B">B</option>
-									<option value="C">C</option>
-									<option value="D">D</option>
-									<option value="F">F</option>
-								</select>
-							</div>
-							<div class="form-group col-sm-3">
-								<label>널널</label> <select name="comfortableScore"
-									class="form-control">
-									<option value="A" selected>A</option>
-									<option value="B">B</option>
-									<option value="C">C</option>
-									<option value="D">D</option>
-									<option value="F">F</option>
-								</select>
-							</div>
-							<div class="form-group col-sm-3">
-								<label>강의</label> <select name="lectureScore"
-									class="form-control">
-									<option value="A" selected>A</option>
-									<option value="B">B</option>
-									<option value="C">C</option>
-									<option value="D">D</option>
-									<option value="F">F</option>
-								</select>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-secondary"
-								data-dismiss="modal">취소</button>
-							<button type="submit" class="btn btn-primary">등록하기</button>
-						</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+	
+	
+	
+	
 	<div class="modal fade" id="reportModal" tabindex="-1" role="dialog"
 		aria-labelledby="modal" aria-hidden="true">
 		<div class="modal-dialog">
