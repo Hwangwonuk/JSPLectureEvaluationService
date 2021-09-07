@@ -105,27 +105,26 @@
 	<div class="container">
 		<div class="row">
 			<!-- 게시판의  목록들이 홀,짝 번갈아가며 색상이 변경되게 만들어줌 -->
+		<form method="post" action="writeAction.jsp" style=" width:100%;">
 			<table class="table table-striped" style="text-align:center; border:1px solid #dddddd">
 				<thead>
 					<tr>
-						<th style="background-color: #eeeeee text-align: center;">번호</th>
-						<th style="background-color: #eeeeee text-align: center;">제목</th>
-						<th style="background-color: #eeeeee text-align: center;">작성자</th>
-						<th style="background-color: #eeeeee text-align: center;">작성일</th>
+						<th colspan="2" style="background-color: #eeeeee text-align: center;">게시판 글쓰기 양식</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>1</td>
-						<td>안녕하세요</td>
-						<td>홍길동</td>
-						<td>2021-05-04</td>
+						<td><input type="text" class="form-control" placeholder="글 제목" name="bbsTitle" maxlength="50" /></td>
+					</tr>
+					<tr>	
+						<td><textarea class="form-control" placeholder="글 내용" name="bbsContent" maxlength="2048" style="height: 350px;"></textarea></td>
 					</tr>
 				</tbody>
 			</table>
-			<div style="width:100%; text-align:right;">
-			<a href="write.jsp" class="btn btn-primary pull-right">글쓰기</a>
+			<div style="float:right;">
+				<input type="submit" class="btn btn-primary pull-right" value="글쓰기" />
 			</div>
+		</form>
 		</div>
 	</div>
 	
@@ -145,46 +144,7 @@
 <%
 	}
 %>
-	
-	<!-- pagination은 bootstrap에서 제공되는 기술중 하나로서 여러개의 페이지가 있는 하나의 구성요소를 작업할 때 사용 일반적으로 게시판에서 사용  -->
-	<ul class="pagination justify-content-center mt-3 ">
-		<li class="page-item">
-<%
-	if(pageNumber <= 0) {
-%>
-	<a class="page-link disabled">이전</a>
-<%
-	} else {
-	// 특정한 URL로 이동하는 경우에는 UTLEncoder를 이용하는게 일반적이다. 현재 사용자가 입력했던 값은 유지한채 페이지를 뒤로이동
-%>
-	<a class="page-link" href="./index.jsp?lectureDivide=<%= URLEncoder.encode(lectureDivide, "UTF-8") %>&searchType=
-	<%= URLEncoder.encode(searchType, "UTF-8") %>&search=<%= URLEncoder.encode(search, "UTF-8") %>&pageNumber=
-	<%= pageNumber - 1 %>">이전</a>
-<%
-	}
-%>
-		</li>
-		<li>
-<%
-	if(evaluationList.size() < 6) {
-%>
-	<a class="page-link disabled">다음</a>
-<%
-	} else {
-	// 특정한 URL로 이동하는 경우에는 UTLEncoder를 이용하는게 일반적이다. 현재 사용자가 입력했던 값은 유지한채 페이지를 뒤로이동
-%>
-	<a class="page-link" href="./index.jsp?lectureDivide=<%= URLEncoder.encode(lectureDivide, "UTF-8") %>&searchType=
-	<%= URLEncoder.encode(searchType, "UTF-8") %>&search=<%= URLEncoder.encode(search, "UTF-8") %>&pageNumber=
-	<%= pageNumber + 1 %>">다음</a>
-<%
-	}
-%>
-		</li>
-	</ul>
-	
-	
-	
-	
+
 	<div class="modal fade" id="reportModal" tabindex="-1" role="dialog"
 		aria-labelledby="modal" aria-hidden="true">
 		<div class="modal-dialog">

@@ -16,7 +16,7 @@ public class UserDAO {
 			// DB접근하는 함수는 DatabaseUtil 외부 util에 정의를 함으로써 안정적으로 모듈화 함
 			conn = DatabaseUtil.getConnection();	// DB와 연결
 			pstmt = conn.prepareStatement(SQL);		// SQL실행 문자로 준비시킴
-			pstmt.setString(1, userID);			// 사용자로부터 입력받은  ID값을 첫번째 물음표에 넣어줌
+			pstmt.setString(1, userID);				// 사용자로부터 입력받은  ID값을 첫번째 물음표에 넣어줌
 			rs = pstmt.executeQuery();				// DB실행문을 실행시킨 결과를 담음
 			if (rs.next()) {						// 실행결과가 존재하는 경우에 한해서
 				if (rs.getString(1).equals(userPassword)) {	
