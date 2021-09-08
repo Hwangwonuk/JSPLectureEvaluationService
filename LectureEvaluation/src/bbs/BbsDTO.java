@@ -58,6 +58,4 @@ public class BbsDTO {
 		this.bbsAvailable = bbsAvailable;
 	}
 	
-	
-	
 }
