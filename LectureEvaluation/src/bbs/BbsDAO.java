@@ -147,4 +147,39 @@ public class BbsDAO {
 		}
 		return false; 
 	}
+	
+	public Bbs getBbs(int bbsID) {
+		String SQL = "SELECT * FROM BBS WHERE bbsID = ?";
+		// bbsID가 특정한 숫자인 경우 어떠한 행위를 수행하도록
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DatabaseUtil.getConnection();	// DB와 연결
+			pstmt = conn.prepareStatement(SQL);		// SQL실행 문자로 준비시킴
+			// getNext()는 다음으로 작성될 글의 번호를 의미한다. 만약 글이 5개가 있다면 getNext()는 6이된다. 
+			// pageNumber는 5개니까  1페이지가 되고 즉 위의 SQL 실행문에 ?에 6보다 작은것만 가져온다 라는 의미
+			pstmt.setInt(1, bbsID);	
+			rs = pstmt.executeQuery();
+			if (rs.next()) { 
+				Bbs bbs = new Bbs();
+				bbs.setBbsID(rs.getInt(1));
+				bbs.setBbsTitle(rs.getString(2));
+				bbs.setUserID(rs.getString(3));
+				bbs.setBbsDate(rs.getString(4));
+				bbs.setBbsContent(rs.getString(5));
+				bbs.setBbsAvailable(rs.getInt(6));
+				return bbs;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Connection, PreparedStatement, ResultSet은 한번 사용이 되고나면 자원을 해제하여야 한다.
+			// 서버에 무리가 가지 않도록 하기위해서
+			try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (pstmt != null) pstmt.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+		}
+		return null; // 해당 글이 존재하지 않는다면		
+	}
 }
