@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter"%>
-<%@ page import="bbs.Bbs"%>
-<%@ page import="bbs.BbsDAO"%>
 <%@ page import="user.UserDAO"%>
 <%@ page import="evaluation.EvaluationDTO"%>
 <%@ page import="evaluation.EvaluationDAO"%>
+<%@ page import="bbs.Bbs"%>
+<%@ page import="bbs.BbsDAO"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="java.net.URLEncoder"%>
 <!doctype html>
@@ -26,7 +26,6 @@
 	String searchType = "최신순";			   // 기본적으로 최신순으로 검색
 	String search = "";				       // 기본적으로 어떠한 내용도 검색하지 않은것 공백
 	int pageNumber = 0;					   // 기본적으로 0페이지
-	
 	if (request.getParameter("lectureDivide") != null) { // 사용자가 특정한 내용으로 검색을 했는지
 		lectureDivide = request.getParameter("lectureDivide");
 	}
@@ -43,13 +42,10 @@
 			System.out.println("검색 페이지 번호 오류");
 		}	
 	}
-	
 	String userID = null;
-	
 	if(session.getAttribute("userID") != null) { // 로그인을 한 상태라서 userID session의 값이 존재한다면
 		userID = (String) session.getAttribute("userID"); // userID에 해당 session의 값을 넣는다
 	}
-	
 	if(userID == null) {
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
@@ -59,9 +55,7 @@
 		script.close();
 		return;
 	}
-	
 	boolean emailChecked = new UserDAO().getUserEmailChecked(userID); // 사용자가 이메일 인증을 받았는지
-	
 	if(emailChecked == false) { // 인증을 받지 않은 경우
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
@@ -72,20 +66,28 @@
 	}
 	
 	int bbsID = 0;
-	if (request.getParameter("bbsID") != null) { // bbsID가 존재한다면
+	if (request.getParameter("bbsID") != null) {
 		bbsID = Integer.parseInt(request.getParameter("bbsID"));
 	}
-	if (bbsID == 0) {
+	if(bbsID == 0) {
 		PrintWriter script = response.getWriter();
 		script.println("<script>");
-		script.println("alert('유효하지 않은 글입니다.');");
+		script.println("alert('유효하지 않은 글입니다');");
 		script.println("location.href = 'bbs.jsp';");
 		script.println("</script>");
 		script.close();
 		return;
 	}
-	// 유효한 글이라면 구체적인 정보를 bbs에 담는다
 	Bbs bbs = new BbsDAO().getBbs(bbsID);
+	if (!userID.equals(bbs.getUserID())) { // 글 작성자의 ID와 실제 유저의 ID 일치하지 않으면
+		PrintWriter script = response.getWriter();
+		script.println("<script>");
+		script.println("alert('권한이 없습니다');");
+		script.println("location.href = 'bbs.jsp';");
+		script.println("</script>");
+		script.close();
+		return;
+	}
 %>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<a class="navbar-brand" href="index.jsp">강의평가 웹 사이트</a>
@@ -121,42 +123,26 @@
 	<div class="container">
 		<div class="row">
 			<!-- 게시판의  목록들이 홀,짝 번갈아가며 색상이 변경되게 만들어줌 -->
+		<form method="post" action="updateAction.jsp?bbsID=<%= bbsID %>" style=" width:100%;">
 			<table class="table table-striped" style="text-align:center; border:1px solid #dddddd">
 				<thead>
 					<tr>
-						<th colspan="3" style="background-color: #eeeeee text-align: center;">게시판 글 보기</th>
+						<th colspan="2" style="background-color: #eeeeee text-align: center;">게시판 글 수정 양식</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style="width: 20%;">글 제목</td>
-						<td colspan="2"><%= bbs.getBbsTitle().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") %></td>
+						<td><input type="text" class="form-control" placeholder="글 제목" name="bbsTitle" maxlength="50" value="<%= bbs.getBbsTitle() %>" /></td>
 					</tr>
-					<tr>
-						<td>작성자</td>
-						<td colspan="2"><%= bbs.getUserID() %></td>
-					</tr>
-					<tr>
-						<td>작성일자</td>
-						<td colspan="2"><%= bbs.getBbsDate().substring(0, 11) + bbs.getBbsDate().substring(11, 13) + "시" + bbs.getBbsDate().substring(14, 16) + "분" %></td>
-					</tr>
-					<tr>
-						<td>내용</td>
-						<td colspan="2" style="min-height: 200px; text-align: left;"><%= bbs.getBbsContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") %></td>
+					<tr>	
+						<td><textarea class="form-control" placeholder="글 내용" name="bbsContent" maxlength="2048" style="height: 350px;"><%= bbs.getBbsContent() %></textarea></td>
 					</tr>
 				</tbody>
 			</table>
-			<a href="bbs.jsp" class="btn btn-primary">목록</a>&nbsp;&nbsp;
-			<%
-				if(userID != null && userID.equals(bbs.getUserID())) { // 해당 글의 작성자가 본인이라면
-			%>
 			<div style="float:right;">
-				<a href="update.jsp?bbsID=<%= bbsID %>" class="btn btn-primary">수정</a>&nbsp;
-				<a onclick="return confirm('정말로 삭제하시겠습니까?')" href="bdeleteAction.jsp?bbsID=<%= bbsID %>" class="btn btn-primary">삭제</a>
+				<input type="submit" class="btn btn-primary pull-right" value="글수정" />
 			</div>
-			<%			
-				}
-			%>
+		</form>
 		</div>
 	</div>
 	

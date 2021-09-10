@@ -38,6 +38,12 @@
 				<li class="nav-item active">
 					<a class="nav-link" href="index.jsp">메인</a>
 				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="bbs.jsp">게시판</a>
+				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="main.jsp">웹 사이트 소개</a>
+				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" id="dropdown" data-toggle="dropdown"> 회원 관리 </a>
 						<div class="dropdown-menu" aria-labelledby="dropdown">
@@ -46,10 +52,6 @@
 %>
 							<a class="dropdown-item" href="userLogin.jsp">로그인</a> 
 							<a class="dropdown-item" href="userJoin.jsp">회원가입</a>
-<%
-	} else { // 로그인이 된 상태라면
-%>
-							<a class="dropdown-item" href="userLogout.jsp">로그아웃</a>
 <%
 	}
 %>

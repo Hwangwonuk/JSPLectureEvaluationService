@@ -38,21 +38,17 @@
 				<li class="nav-item active">
 					<a class="nav-link" href="index.jsp">메인</a>
 				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="bbs.jsp">게시판</a>
+				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="main.jsp">웹 사이트 소개</a>
+				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" id="dropdown" data-toggle="dropdown"> 회원 관리 </a>
 						<div class="dropdown-menu" aria-labelledby="dropdown">
-<%
-	if(userID == null) { // 로그인이 안된 상태라면
-%>
 							<a class="dropdown-item" href="userLogin.jsp">로그인</a> 
 							<a class="dropdown-item" href="userJoin.jsp">회원가입</a>
-<%
-	} else { // 로그인이 된 상태라면
-%>
-							<a class="dropdown-item" href="userLogout.jsp">로그아웃</a>
-<%
-	}
-%>
 						</div>
 				</li>
 			</ul>
@@ -74,7 +70,10 @@
 				<label>비밀번호</label>
 				<input type="password" name="userPassword" class="form-control">
 			</div>
-			<button type="submit" class="btn btn-primary">로그인</button>
+			<div>
+				<button type="submit" class="btn btn-primary">로그인</button>
+				<button style="float:right" type="button" class="btn btn-secondary" onclick="location.href='userJoin.jsp'">회원가입</button>
+			</div>
 		</form>	
 	</section>		
 	<footer class="bg-dark mt-4 mt-4 p-5 text-center" style="color: #FFFFFF;">

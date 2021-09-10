@@ -182,4 +182,50 @@ public class BbsDAO {
 		}
 		return null; // 해당 글이 존재하지 않는다면		
 	}
+	
+	public int update(int bbsID, String bbsTitle, String bbsContent) { // 글 수정기능
+		String SQL = "UPDATE BBS SET bbsTitle = ?, bbsContent = ? WHERE bbsID = ?";
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DatabaseUtil.getConnection();	// DB와 연결
+			pstmt = conn.prepareStatement(SQL);		// SQL실행 문자로 준비시킴
+			pstmt.setString(1, bbsTitle);
+			pstmt.setString(2, bbsContent);
+			pstmt.setInt(3, bbsID);
+			return pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Connection, PreparedStatement, ResultSet은 한번 사용이 되고나면 자원을 해제하여야 한다.
+			// 서버에 무리가 가지 않도록 하기위해서
+			try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (pstmt != null) pstmt.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+		}
+		return -1; // 데이터베이스 오류
+	}
+	
+	public int delete(int bbsID) { // 글 삭제 기능
+		String SQL = "UPDATE BBS SET bbsAvailable = 0 WHERE bbsID = ?"; // 글을 삭제하더라도  글에대한 정보가 남아있을 수 있도록
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = DatabaseUtil.getConnection();	// DB와 연결
+			pstmt = conn.prepareStatement(SQL);		// SQL실행 문자로 준비시킴
+			pstmt.setInt(1, bbsID);
+			return pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// Connection, PreparedStatement, ResultSet은 한번 사용이 되고나면 자원을 해제하여야 한다.
+			// 서버에 무리가 가지 않도록 하기위해서
+			try { if (conn != null) conn.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (pstmt != null) pstmt.close(); } catch (Exception e) { e.printStackTrace(); }
+			try { if (rs != null) rs.close(); } catch (Exception e) { e.printStackTrace(); }
+		}
+		return -1; // 데이터베이스 오류
+	}
 }
