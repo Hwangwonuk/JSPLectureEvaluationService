@@ -98,9 +98,41 @@
 		<div class="jumbotron">
 			<div class="container">
 				<h1>웹 사이트 소개</h1>
-				<p>이 웹 사이트는 부트스트랩으로 만든 JSP 웹 사이트 입니다. 최소한의 간단한 로직만을 이용해서 개발했습니다. 디자인 템플릿으로는 부트스트랩을 이용했습니다.</p>
+				<p>이 웹 사이트는 부트스트랩으로 만든 JSP 웹 사이트 입니다. 최소한의 간단한 로직만을 이용해서 개발했습니다.<br /> 디자인 템플릿으로는 부트스트랩을 이용했습니다.</p>
 				<p><a class="btn btn-primary btn-pull" href="#" role="botton">자세히 알아보기</a></p>
 			</div>
+		</div>
+	</div>
+	<!-- carousel은 간단하게 사진첩같은 것이라고 생각하면 된다. -->>
+	<div class="container">
+		<div id="myCarousel" class="carousel slide" data-ride="carousel">
+			 
+			<ol class="carousel-indicators">
+				<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+				<li data-target="#myCarousel" data-slide-to="1" ></li>
+				<li data-target="#myCarousel" data-slide-to="2" ></li>
+			</ol>
+			<!-- 실제로 사진이 들어가는 영역 -->
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img class="d-block w-100" src="images/a.jpg" />
+				</div>
+				<div class="carousel-item">
+					<img class="d-block w-100" src="images/b.png" />
+				</div>
+				<div class="carousel-item">
+					<img class="d-block w-100" src="images/c.png" />
+				</div>
+			</div>
+			<!-- 사진을 왼쪽 오른쪽으로 넘길수있게 만듬 -->
+			<a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="sr-only">Previous</span>
+			</a>
+			<a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="sr-only">Next</span>
+			</a>
 		</div>
 	</div>
 	<footer class="bg-dark mt-4 mt-4 p-5 text-center" style="color: #FFFFFF;">
