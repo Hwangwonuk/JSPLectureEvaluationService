@@ -19,27 +19,6 @@
 </head>
 <body>
 <%
-	request.setCharacterEncoding("UTF-8"); // index.jsp페이지는 강의평가 게시글을 출력해주기 때문에 항상 사용자가 어떤 게시물을 검색했는지 판단할 수 있어야 한다.
-	String lectureDivide = "전체";		   // 기본적으로 사용자가 검색한 강의구분은 전체로 설정
-	String searchType = "최신순";			   // 기본적으로 최신순으로 검색
-	String search = "";				       // 기본적으로 어떠한 내용도 검색하지 않은것 공백
-	int pageNumber = 0;					   // 기본적으로 0페이지
-	if (request.getParameter("lectureDivide") != null) { // 사용자가 특정한 내용으로 검색을 했는지
-		lectureDivide = request.getParameter("lectureDivide");
-	}
-	if (request.getParameter("searchType") != null) { 
-		searchType = request.getParameter("searchType");
-	}
-	if (request.getParameter("search") != null) { 
-		search = request.getParameter("search");
-	}
-	if (request.getParameter("pageNumber") != null) {
-		try {
-			pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
-		} catch (Exception e) { // 사용자가 입력한 값이 정수형이 아닌 경우에는 오류가 발생하기 때문에 예외처리
-			System.out.println("검색 페이지 번호 오류");
-		}	
-	}
 	String userID = null;
 	if(session.getAttribute("userID") != null) { // 로그인을 한 상태라서 userID session의 값이 존재한다면
 		userID = (String) session.getAttribute("userID"); // userID에 해당 session의 값을 넣는다
