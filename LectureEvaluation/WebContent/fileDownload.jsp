@@ -4,6 +4,7 @@
 <%@ page import="evaluation.EvaluationDTO"%>
 <%@ page import="evaluation.EvaluationDAO"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="java.io.File"%>
 <%@ page import="java.net.URLEncoder"%>
 <!doctype html>
 <html>
@@ -83,6 +84,15 @@
 		파일: <input type="file" name="file" /><br />
 		<input type="submit" value="업로드" /><br />
 	</form>
+<%
+String directory = application.getRealPath("/upload/");
+String files[] = new File(directory).list();
+
+for(String file : files) {
+	out.write("<a href=\"" + request.getContextPath() + "/downloadAction?file=" + 
+		java.net.URLEncoder.encode(file, "UTF-8") + "\">" + file + "</a><br />");
+}
+%>
 
 
 	
