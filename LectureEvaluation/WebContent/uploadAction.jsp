@@ -48,8 +48,18 @@
 	String fileRealName =  multipartRequest.getFilesystemName("file");
 	// 실제로 서버에 업로드가된 파일 이름을 가져온다
 	
-	new FileDAO().upload(fileName, fileRealName);
-	// 실제로 업로드를 수행할 수 있도록 만듬
-	out.write("파일명: " + fileName + "<br />");
-	out.write("실제 파일명: " + fileRealName + "<br />");
+	
+	
+	if (!fileName.endsWith(".doc") && !fileName.endsWith(".hwp") && !fileName.endsWith(".pdf") &&
+			!fileName.endsWith(".xls")) {
+		// 위의 네가지 확장자만 업로드 할수있도록 만들어줌
+		File file = new File(directory + fileRealName);
+		file.delete(); // 올바른 확장자가 아니라면 지워버린다
+		out.write("업로드할 수 없는 확장자입니다.");
+	} else {
+		new FileDAO().upload(fileName, fileRealName);
+		// 실제로 업로드를 수행할 수 있도록 만듬
+		out.write("파일명: " + fileName + "<br />");
+		out.write("실제 파일명: " + fileRealName + "<br />");
+	}
 %>
