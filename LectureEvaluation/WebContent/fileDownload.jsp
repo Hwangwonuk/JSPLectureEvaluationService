@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter"%>
 <%@ page import="user.UserDAO"%>
+<%@ page import="file.FileDAO"%>
+<%@ page import="file.FileDTO"%>
+<%@ page import="user.UserDAO"%>
 <%@ page import="evaluation.EvaluationDTO"%>
 <%@ page import="evaluation.EvaluationDAO"%>
 <%@ page import="java.util.ArrayList"%>
@@ -85,13 +88,22 @@
 		<input type="submit" value="업로드" /><br />
 	</form>
 <%
-String directory = application.getRealPath("/upload/");
+	ArrayList<FileDTO> fileList = new FileDAO().getList();
+
+	for(FileDTO file : fileList) {
+		out.write("<a href=\"" + request.getContextPath() + "/downloadAction?file=" + 
+			java.net.URLEncoder.encode(file.getFileRealName(), "UTF-8") + "\">" +
+				file.getFileName() + "(다운로드 횟수:  " + file.getDownloadCount() + ")</a><br />");
+	}
+
+
+/* String directory = application.getRealPath("/upload/");
 String files[] = new File(directory).list();
 
 for(String file : files) {
 	out.write("<a href=\"" + request.getContextPath() + "/downloadAction?file=" + 
 		java.net.URLEncoder.encode(file, "UTF-8") + "\">" + file + "</a><br />");
-}
+} */
 %>
 
 

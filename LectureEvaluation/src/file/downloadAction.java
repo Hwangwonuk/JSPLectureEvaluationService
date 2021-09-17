@@ -3,7 +3,6 @@ package file;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -47,6 +46,8 @@ public class downloadAction extends HttpServlet {
 		while ((data = (fileInputStream.read(b, 0, b.length))) != -1) {
 			servletOutputStream.write(b, 0,data);
 		}
+		
+		new FileDAO().hit(fileName); // 다운로드 후 다운로드 수 1증가를 위해 hit메소드 호출
 		
 		servletOutputStream.flush();
 		servletOutputStream.close();
