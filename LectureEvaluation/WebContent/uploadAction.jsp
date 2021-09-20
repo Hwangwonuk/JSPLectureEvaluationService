@@ -7,6 +7,7 @@
 <%@ page import="java.net.URLEncoder"%>
 <%@ page import="file.FileDAO" %>
 <%@ page import="java.io.File" %>
+<%@ page import="java.util.Enumeration" %>
 <%@ page import="com.oreilly.servlet.multipart.DefaultFileRenamePolicy" %>
 <%@ page import="com.oreilly.servlet.MultipartRequest" %>
 
@@ -43,23 +44,27 @@
 	// multipartRequest 객체를 활용해서 사용자가 전송한 request(파일정보)를 토대로 우리가 만든 upload폴더 안에 maxSize만큼만 utf-8인코딩을 적용해서
 	// 실제로 파일업로드를 수행할 수 있도록 만들어 줌
 	
-	String fileName = multipartRequest.getOriginalFileName("file");
-	// 사용자가 전송한 file(upload.jsp의 name=file)에서 파라미터 값을 받아서 실제로 사용자가 업로드하고자 하는 파일이름을 fileName 변수에 넣는다
-	String fileRealName =  multipartRequest.getFilesystemName("file");
-	// 실제로 서버에 업로드가된 파일 이름을 가져온다
-	
-	
-	
-	if (!fileName.endsWith(".doc") && !fileName.endsWith(".hwp") && !fileName.endsWith(".pdf") &&
-			!fileName.endsWith(".xls")) {
-		// 위의 네가지 확장자만 업로드 할수있도록 만들어줌
-		File file = new File(directory + fileRealName);
-		file.delete(); // 올바른 확장자가 아니라면 지워버린다
-		out.write("업로드할 수 없는 확장자입니다.");
-	} else {
-		new FileDAO().upload(fileName, fileRealName);
-		// 실제로 업로드를 수행할 수 있도록 만듬
-		out.write("파일명: " + fileName + "<br />");
-		out.write("실제 파일명: " + fileRealName + "<br />");
+	Enumeration fileNames = multipartRequest.getFileNames(); 
+	// Enumeration = for문과 비슷하게 사용된다. 여러개의 파일이 있으면 한개씩 분석하기 위한 목적으로 사용 java.util패키지에 존재함
+	while(fileNames.hasMoreElements()) { // 파일이 존재하는한 계속해서 찾을 수 있도록
+		String parameter = (String) fileNames.nextElement(); // parameter 값 설정
+		String fileName = multipartRequest.getOriginalFileName(parameter);
+		String fileRealName =  multipartRequest.getFilesystemName(parameter);
+
+		if (fileName == null) continue; // 사용자가 업로드 양식에서 1,3에만 업로드를 했다면 2번은 null이기 때문에 처리가 되지 않도록 continue
+		if (!fileName.endsWith(".doc") && !fileName.endsWith(".hwp") && !fileName.endsWith(".pdf") &&
+				!fileName.endsWith(".xls")) {
+			// 위의 네가지 확장자만 업로드 할수있도록 만들어줌
+			File file = new File(directory + fileRealName);
+			file.delete(); // 올바른 확장자가 아니라면 지워버린다
+			out.write("업로드할 수 없는 확장자입니다.");
+		} else {
+			new FileDAO().upload(fileName, fileRealName);
+			// 실제로 업로드를 수행할 수 있도록 만듬
+			out.write("파일명: " + fileName + "<br />");
+			out.write("실제 파일명: " + fileRealName + "<br />");
+		}
 	}
+	
+	
 %>
