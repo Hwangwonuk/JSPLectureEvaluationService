@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter"%>
 <%@ page import="user.UserDAO"%>
+<%@ page import="file.FileDAO"%>
+<%@ page import="file.FileDTO"%>
 <%@ page import="evaluation.EvaluationDTO"%>
 <%@ page import="evaluation.EvaluationDAO"%>
 <%@ page import="java.util.ArrayList"%>
@@ -61,9 +63,6 @@
 				<li class="nav-item active">
 					<a class="nav-link" href="upload.jsp">파일 업로드</a>
 				</li>
-				<li class="nav-item active">
-					<a class="nav-link" href="fileDownload.jsp">파일 다운로드</a>
-				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" id="dropdown" data-toggle="dropdown"> 회원 관리 </a>
 						<div class="dropdown-menu" aria-labelledby="dropdown">
@@ -85,7 +84,24 @@
 		파일: <input type="file" name="file3" /><br />
 		<input type="submit" value="업로드" /><br />
 	</form>
+<%
+	ArrayList<FileDTO> fileList = new FileDAO().getList();
 
+	for(FileDTO file : fileList) {
+		out.write("<a href=\"" + request.getContextPath() + "/downloadAction?file=" + 
+			java.net.URLEncoder.encode(file.getFileRealName(), "UTF-8") + "\">" +
+				file.getFileName() + "(다운로드 횟수:  " + file.getDownloadCount() + ")</a><br />");
+	}
+
+
+/* String directory = application.getRealPath("/upload/");
+String files[] = new File(directory).list();
+
+for(String file : files) {
+	out.write("<a href=\"" + request.getContextPath() + "/downloadAction?file=" + 
+		java.net.URLEncoder.encode(file, "UTF-8") + "\">" + file + "</a><br />");
+} */
+%>
 
 	
 	<footer class="bg-dark mt-4 mt-4 p-5 text-center" style="color: #FFFFFF;">

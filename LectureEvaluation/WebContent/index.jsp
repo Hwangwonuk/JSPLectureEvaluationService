@@ -82,9 +82,6 @@
 				<li class="nav-item active">
 					<a class="nav-link" href="upload.jsp">파일 업로드</a>
 				</li>
-				<li class="nav-item active">
-					<a class="nav-link" href="fileDownload.jsp">파일 다운로드</a>
-				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" id="dropdown" data-toggle="dropdown"> 회원 관리 </a>
 						<div class="dropdown-menu" aria-labelledby="dropdown">
