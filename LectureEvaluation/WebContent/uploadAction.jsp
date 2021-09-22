@@ -53,8 +53,8 @@
 
 		if (fileName == null) continue; // 사용자가 업로드 양식에서 1,3에만 업로드를 했다면 2번은 null이기 때문에 처리가 되지 않도록 continue
 		if (!fileName.endsWith(".doc") && !fileName.endsWith(".hwp") && !fileName.endsWith(".pdf") &&
-				!fileName.endsWith(".xls")) {
-			// 위의 네가지 확장자만 업로드 할수있도록 만들어줌
+				!fileName.endsWith(".xls") && !fileName.endsWith(".txt")) {
+			// 위의 다섯가지 확장자만 업로드 할수있도록 만들어줌
 			File file = new File(directory + fileRealName);
 			file.delete(); // 올바른 확장자가 아니라면 지워버린다
 			out.write("업로드할 수 없는 확장자입니다.");

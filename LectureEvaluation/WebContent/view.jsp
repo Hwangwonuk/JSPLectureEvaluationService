@@ -2,6 +2,8 @@
 <%@ page import="java.io.PrintWriter"%>
 <%@ page import="bbs.Bbs"%>
 <%@ page import="bbs.BbsDAO"%>
+<%@ page import="file.FileDAO"%>
+<%@ page import="file.FileDTO"%>
 <%@ page import="user.UserDAO"%>
 <%@ page import="evaluation.EvaluationDTO"%>
 <%@ page import="evaluation.EvaluationDAO"%>
@@ -103,9 +105,6 @@
 				<li class="nav-item active">
 					<a class="nav-link" href="main.jsp">웹 사이트 소개</a>
 				</li>
-				<li class="nav-item active">
-					<a class="nav-link" href="upload.jsp">파일 업로드</a>
-				</li>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" id="dropdown" data-toggle="dropdown"> 회원 관리 </a>
 						<div class="dropdown-menu" aria-labelledby="dropdown">
@@ -147,6 +146,35 @@
 						<td>내용</td>
 						<td colspan="2" style="min-height: 200px; text-align: left;"><%= bbs.getBbsContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") %></td>
 					</tr>
+					<tr>
+						<td>파일업로드</td>
+						<td colspan="2" style="min-height: 200px; text-align: left;">
+						<form action="uploadAction.jsp" method="post" enctype="multipart/form-data">
+								파일: <input type="file" name="file1" /><br />
+								파일: <input type="file" name="file2" /><br />
+								파일: <input type="file" name="file3" /><br />
+							<input type="submit" value="업로드" /><br />
+						</form>
+<%
+	ArrayList<FileDTO> fileList = new FileDAO().getList();
+
+	for(FileDTO file : fileList) {
+		out.write("<a href=\"" + request.getContextPath() + "/downloadAction?file=" + 
+			java.net.URLEncoder.encode(file.getFileRealName(), "UTF-8") + "\">" +
+				file.getFileName() + "(다운로드 횟수:  " + file.getDownloadCount() + ")</a><br />");
+	}
+
+
+/* String directory = application.getRealPath("/upload/");
+String files[] = new File(directory).list();
+
+for(String file : files) {
+	out.write("<a href=\"" + request.getContextPath() + "/downloadAction?file=" + 
+		java.net.URLEncoder.encode(file, "UTF-8") + "\">" + file + "</a><br />");
+} */
+%>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 			<a href="bbs.jsp" class="btn btn-primary">목록</a>&nbsp;&nbsp;
@@ -162,7 +190,7 @@
 			%>
 		</div>
 	</div>
-	
+
 <%
 	// 사용자가 검색을 한 내용이 리스트에 담겨서 출력이 되도록 만듬
 	ArrayList<EvaluationDTO> evaluationList = new ArrayList<EvaluationDTO>();
