@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter"%>
 <%@ page import="user.UserDAO"%>
+<%@ page import="bbs.BbsDAO"%>
+<%@ page import="bbs.BbsDTO"%>
+<%@ page import="bbs.Bbs"%>
+<%@ page import="user.UserDAO"%>
 <%@ page import="evaluation.EvaluationDTO"%>
 <%@ page import="evaluation.EvaluationDAO"%>
 <%@ page import="java.util.ArrayList"%>
@@ -116,6 +120,12 @@
 			<div style="float:right;">
 				<input type="submit" class="btn btn-primary pull-right" value="글쓰기" />
 			</div>
+		</form>
+		<form action="uploadAction.jsp" method="post" enctype="multipart/form-data">
+				파일: <input type="file" name="file1" /><br />
+				파일: <input type="file" name="file2" /><br />
+				파일: <input type="file" name="file3" /><br />
+			<input type="submit" value="업로드" /><br />
 		</form>
 		</div>
 	</div>

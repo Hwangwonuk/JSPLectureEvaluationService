@@ -147,14 +147,8 @@
 						<td colspan="2" style="min-height: 200px; text-align: left;"><%= bbs.getBbsContent().replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") %></td>
 					</tr>
 					<tr>
-						<td>파일업로드</td>
+						<td>파일다운로드</td>
 						<td colspan="2" style="min-height: 200px; text-align: left;">
-						<form action="uploadAction.jsp" method="post" enctype="multipart/form-data">
-								파일: <input type="file" name="file1" /><br />
-								파일: <input type="file" name="file2" /><br />
-								파일: <input type="file" name="file3" /><br />
-							<input type="submit" value="업로드" /><br />
-						</form>
 <%
 	ArrayList<FileDTO> fileList = new FileDAO().getList();
 

@@ -143,6 +143,18 @@
 				<input type="submit" class="btn btn-primary pull-right" value="글수정" />
 			</div>
 		</form>
+		<%
+		if(userID != null && userID.equals(bbs.getUserID())) { // 해당 글의 작성자가 본인이라면
+		%>
+		<form action="uploadAction.jsp" method="post" enctype="multipart/form-data">
+				파일: <input type="file" name="file1" /><br />
+				파일: <input type="file" name="file2" /><br />
+				파일: <input type="file" name="file3" /><br />
+				<input type="submit" value="업로드" /><br />
+		</form>
+		<%			
+		}
+		%>
 		</div>
 	</div>
 	
